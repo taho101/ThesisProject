@@ -33,7 +33,7 @@ public class JavaScriptParser {
 		            tmp = replacement;
 		    }
 		    
-		    System.out.println(tmp);
+		    //System.out.println(tmp);
 		}
 	}
 }

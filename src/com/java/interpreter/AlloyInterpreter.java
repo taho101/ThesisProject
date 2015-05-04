@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.java.builders.XMLBuilder;
 import com.java.parsers.JavaScriptParser;
+import com.java.parsers.JsonParser;
 import com.java.parsers.XMLParser;
 import com.java.structure.AlloyStructure;
 
@@ -32,6 +34,10 @@ public class AlloyInterpreter implements Interpreter{
 						this.parseJS(file);
 					break;
 					
+					case "json":
+						this.parseJson(file);
+					break;
+					
 					case "tss":
 					break;
 					
@@ -46,12 +52,23 @@ public class AlloyInterpreter implements Interpreter{
 	private void parseXML(File file) throws Exception{
 		XMLParser parser = new XMLParser(file);
 		
-		System.out.println(parser.parseTableView());
+		//System.out.println(parser.parseTableView());
 	}
 	
 	private void parseJS(File file) throws IOException{
 		JavaScriptParser parser = new JavaScriptParser();
 		
 		parser.applyMappings(file);
+	}
+	
+	private void parseJson(File file){
+		XMLBuilder xml = new XMLBuilder();
+		JsonParser parser = new JsonParser(file);
+		
+		xml.startComponent(parser.getId());
+		xml.addName(parser.getName());
+		xml.endComponent();
+		
+		System.out.println(xml.getXML());
 	}
 }
