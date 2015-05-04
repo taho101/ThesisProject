@@ -29,10 +29,10 @@ public class JsonParser {
 		return id.replace(".", "");
 	}
 	
-	public String getName(){
-		return this.parsed.getString("name");
+	public String getAttribute(String name){
+		return (this.parsed.has(name)) ? this.parsed.getString(name) : null;
 	}
-
+	
 	private String readFile(String path, Charset encoding) throws IOException {
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return new String(encoded, encoding);

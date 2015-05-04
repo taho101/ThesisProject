@@ -14,8 +14,8 @@ public class XMLBuilder {
 		this.xml.append("<component format='1' id='"+ id +"'>" + newline);
 	}
 	
-	public void addName(String name){
-		this.xml.append("<name>"+ name +"</name>" + newline);
+	public void addElement(String data, String name){
+		this.xml.append("<"+ name +">"+ data +"</"+ name +">" + newline);
 	}
 	
 	public void endComponent(){
