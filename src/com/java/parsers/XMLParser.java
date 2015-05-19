@@ -2,6 +2,8 @@ package com.java.parsers;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,15 +25,19 @@ public class XMLParser{
 		this.doc.getDocumentElement().normalize();
 	}
 	
-	public String parseTableView(){
+	public Map<String, String> parseTableView(){
 		NodeList nList = doc.getElementsByTagName("TableView");
 		
-		String code = "";
+		Map<String, String> code = new HashMap<String, String>();
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 			Node nNode = nList.item(temp);
 			
 			//use XML mappings to create the equivalent code for Xamarin
-			code = nNode.getNodeName();
+			code.put("TagName", nNode.getNodeName());
+			if(nNode.hasAttributes()){
+				
+			}
+			
 		}
 		
 		return code;

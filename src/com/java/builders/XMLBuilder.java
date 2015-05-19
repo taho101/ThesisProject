@@ -2,8 +2,8 @@ package com.java.builders;
 
 public class XMLBuilder {
 	
-	private StringBuilder xml;
-	private String newline = "\n";
+	protected StringBuilder xml;
+	protected String newline = "\n";
 	
 	public XMLBuilder(){
 		this.xml = new StringBuilder();
