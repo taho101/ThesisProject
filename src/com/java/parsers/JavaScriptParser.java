@@ -2,28 +2,38 @@ package com.java.parsers;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
-import com.java.grammar.ECMAScriptBaseListener;
-import com.java.grammar.ECMAScriptParser;
 import com.java.mappings.JavaScriptMapper;
 
-public class JavaScriptParser extends ECMAScriptBaseListener{
+public class JavaScriptParser{
 	
-	private List<String> data;
+	private List<String> variables;
+	private Map<String, String> functions;
+	private Map<String,String> eventListeners;
+	
 	private JavaScriptMapper mappings;
 	
+	private boolean inFunction = false;
+	private boolean inListener = false;
+	
+	private String event = "";
+	
 	public JavaScriptParser(){
-		this.data = new ArrayList<String>();
+		this.variables = new ArrayList<String>();
+		this.functions = new HashMap<String, String>();
+		this.eventListeners = new HashMap<String, String>();
+		
 		this.mappings = new JavaScriptMapper();
 	}
 	
 	//Rewrite this function
 	public void applyMappings(File file) throws IOException{
-		this.data = Files.readAllLines(file.toPath());
+		/*this.data = Files.readAllLines(file.toPath());
 		
 		Set<String> keys = this.mappings.getKeys();
 
@@ -35,26 +45,38 @@ public class JavaScriptParser extends ECMAScriptBaseListener{
 		        if(!str.equals(replacement)) 
 		            tmp = replacement;
 		    }
+		}*/
+	}
+	
+	public void readCode(List<String> content){
+		int i = 0;
+		for(String str : content){
+			if(str.indexOf("//") == 0) continue;
+			
+			//register event listeners
+			this.addEventListener(str);
+			
+			if(str.indexOf("addEventListener") > -1 && str.indexOf("function") > -1){
+				this.inListener = true;
+				this.event = "Event"+i;
+				i++;
+			}
 		}
 	}
 	
-	
-	public void enterVariableDeclaration(ECMAScriptParser.VariableDeclarationContext ctx) { 
-		//System.out.println(ctx.getText());
-	}
-	
-	public void enterFunctionExpression(ECMAScriptParser.FunctionExpressionContext ctx) { 
-		System.out.println(ctx.getParent().getParent().getParent().getText());
-	}
-	
-	public String readCode(List<String> content){
-		StringBuilder builder = new StringBuilder();
-		
-		for(String st : content){
-			builder.append(st + "\n");
+	private void addEventListener(String str){
+		//add brackets count
+		if(str.indexOf("}") == -1 && this.inListener == true){
+			if(this.eventListeners.containsKey(this.event)){
+				String body = this.eventListeners.get(this.event);
+				body += str + "\n";
+				this.eventListeners.replace(this.event, body);
+			}else{
+				this.eventListeners.put(this.event, str + "\n");
+			}
+		}else if(str.indexOf("}") > -1 && this.inListener == true){
+			this.inListener = false;
 		}
-		
-		return builder.toString();
 	}
 	
 }
