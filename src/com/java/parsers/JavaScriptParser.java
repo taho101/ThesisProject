@@ -61,7 +61,13 @@ public class JavaScriptParser{
 				this.event = "Event"+i;
 				i++;
 			}
+			
+			if(str.indexOf("var ") > -1 && this.inFunction == false && this.inListener == false)
+				this.variables.add(str);
 		}
+		
+		for(String str : this.variables)
+			System.out.println(str);
 	}
 	
 	private void addEventListener(String str){
