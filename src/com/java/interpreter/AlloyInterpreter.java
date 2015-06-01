@@ -1,13 +1,24 @@
 package com.java.interpreter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
+import com.java.builders.CSharpBuilder;
 import com.java.builders.XAMLBuilder;
 import com.java.builders.XMLBuilder;
+import com.java.grammar.ECMAScriptLexer;
+import com.java.grammar.ECMAScriptParser;
 import com.java.main.Helper;
 import com.java.parsers.JavaScriptParser;
 import com.java.parsers.JsonParser;
@@ -17,9 +28,12 @@ import com.java.structure.AlloyStructure;
 public class AlloyInterpreter implements Interpreter {
 
 	private String path;
+	private String componentPath;
 
 	public AlloyInterpreter(String path) {
 		this.path = path;
+		
+		this.prepareStructure();
 	}
 
 	public void buildComponent() throws Exception {
@@ -33,30 +47,54 @@ public class AlloyInterpreter implements Interpreter {
 			for (File file : retrieved.get(key)) {
 				switch (alloy.getExtension(file.getName())) {
 				case "js":
-					this.parseJS(file);
-					break;
+					String csharp = this.parseJS(file);
+					//this.createFile(csharp, "Widget", "cs");
+				break;
 
 				case "json":
-					String data = this.parseJson(file);
-					this.createFile(data, "Manifest", "xml");
+					//String xml = this.parseJson(file);
+					//this.createFile(xml, "Manifest", "xml");
 				break;
 
 				case "tss":
 					break;
 
 				case "xml":
-					this.parseXML(file);
-					break;
+					//String json = this.parseXML(file);
+					//this.createFile(json, "Widget", "xaml");
+				break;
 				}
 			}
 		}
+		
+		System.out.println("Complete");
+	}
+	
+	public void prepareStructure(){
+		File file = new File("C:\\Users\\Ivaylo\\Desktop\\Component");
+		
+		if(!file.exists()) 
+			file.mkdir();
+		
+		this.componentPath = file.getAbsolutePath();
 	}
 
 	public void createFile(String content, String filename, String extension) {
-		//System.out.println(content);
+		File file = new File(this.componentPath + "\\" + filename + "." + extension);
+		
+		try {
+			if(!file.exists())
+				file.createNewFile();
+		
+			PrintWriter writer = new PrintWriter(this.componentPath + "\\" + filename + "." + extension, "UTF-8");
+			writer.println(content);
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
-	private void parseXML(File file) throws Exception {
+	private String parseXML(File file) throws Exception {
 		XMLParser parser = new XMLParser(file);
 		XAMLBuilder xaml = new XAMLBuilder();
 		
@@ -68,13 +106,28 @@ public class AlloyInterpreter implements Interpreter {
 			
 		xaml.endContent();
 		
-		System.out.println(xaml.getXML());
+		return xaml.getXML();
 	}
 
-	private void parseJS(File file) throws IOException {
-		JavaScriptParser parser = new JavaScriptParser();
+	private String parseJS(File file) throws IOException {
+		JavaScriptParser jsParser = new JavaScriptParser();
+		String content = jsParser.readCode(Files.readAllLines(file.toPath()));
+		
+		
+		ECMAScriptLexer lexer = new ECMAScriptLexer(new ANTLRInputStream(content));
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		ECMAScriptParser parser = new ECMAScriptParser(tokens);
+		
+		// Walk the parse tree and listen when the `literal` is being entered.
+		ParseTreeWalker.DEFAULT.walk(jsParser, parser.program());
+		//jsParser.applyMappings(file);
+		
+		CSharpBuilder csharp = new CSharpBuilder(Helper.toUpper(file.getName().replace(".js", "")), "Component");
+		
+		csharp.finishFile();
 
-		parser.applyMappings(file);
+		
+		return csharp.getCode();
 	}
 
 	private String parseJson(File file) {
@@ -90,5 +143,4 @@ public class AlloyInterpreter implements Interpreter {
 
 		return xml.getXML();
 	}
-
 }

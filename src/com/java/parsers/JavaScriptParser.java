@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.java.grammar.ECMAScriptBaseListener;
+import com.java.grammar.ECMAScriptParser;
 import com.java.mappings.JavaScriptMapper;
 
-public class JavaScriptParser {
+public class JavaScriptParser extends ECMAScriptBaseListener{
 	
 	private List<String> data;
 	private JavaScriptMapper mappings;
@@ -19,6 +21,7 @@ public class JavaScriptParser {
 		this.mappings = new JavaScriptMapper();
 	}
 	
+	//Rewrite this function
 	public void applyMappings(File file) throws IOException{
 		this.data = Files.readAllLines(file.toPath());
 		
@@ -32,8 +35,26 @@ public class JavaScriptParser {
 		        if(!str.equals(replacement)) 
 		            tmp = replacement;
 		    }
-		    
-		    //System.out.println(tmp);
 		}
 	}
+	
+	
+	public void enterVariableDeclaration(ECMAScriptParser.VariableDeclarationContext ctx) { 
+		//System.out.println(ctx.getText());
+	}
+	
+	public void enterFunctionExpression(ECMAScriptParser.FunctionExpressionContext ctx) { 
+		System.out.println(ctx.getParent().getParent().getParent().getText());
+	}
+	
+	public String readCode(List<String> content){
+		StringBuilder builder = new StringBuilder();
+		
+		for(String st : content){
+			builder.append(st + "\n");
+		}
+		
+		return builder.toString();
+	}
+	
 }
