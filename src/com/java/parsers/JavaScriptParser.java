@@ -20,6 +20,7 @@ public class JavaScriptParser{
 	
 	private boolean inFunction = false;
 	private boolean inListener = false;
+	private int brackets = 0;
 	
 	private String event = "";
 	
@@ -53,21 +54,22 @@ public class JavaScriptParser{
 		for(String str : content){
 			if(str.indexOf("//") == 0) continue;
 			
-			//register event listeners
-			this.addEventListener(str);
-			
 			if(str.indexOf("addEventListener") > -1 && str.indexOf("function") > -1){
 				this.inListener = true;
 				this.event = "Event"+i;
 				i++;
 			}
 			
+			//register event listeners
+			this.addEventListener(str);
+			
 			if(str.indexOf("var ") > -1 && this.inFunction == false && this.inListener == false)
 				this.variables.add(str);
 		}
 		
-		for(String str : this.variables)
-			System.out.println(str);
+		for (String key : this.eventListeners.keySet()) {
+			System.out.println(key + " " + this.eventListeners.get(key));
+		}
 	}
 	
 	private void addEventListener(String str){
@@ -80,8 +82,22 @@ public class JavaScriptParser{
 			}else{
 				this.eventListeners.put(this.event, str + "\n");
 			}
+			
+			if(str.indexOf("{") > -1){
+				this.brackets++;
+				//System.out.println("Increase: " + this.brackets);
+			}
+			
 		}else if(str.indexOf("}") > -1 && this.inListener == true){
-			this.inListener = false;
+			this.brackets--;
+			
+			String body = this.eventListeners.get(this.event);
+			body += str + "\n";
+			this.eventListeners.replace(this.event, body);
+			
+			//System.out.println("Decrease: " + this.brackets);
+			if(this.brackets == 0) 
+				this.inListener = false;
 		}
 	}
 	
