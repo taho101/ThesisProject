@@ -58,13 +58,17 @@ public class JavaScriptParser {
 				continue;
 
 			if (str.indexOf("addEventListener") > -1 && str.indexOf("function") > -1 ) {
-				this.inListener = true;
-				this.event = "Event" + i;
-				i++;
+				if(this.inListener == false){
+					this.inListener = true;
+					this.event = "Event" + i;
+					i++;
+				}
 			} else if (str.indexOf("addEventListener") == -1 && str.indexOf("function") > -1) {
-				this.inFunction = true;
-				this.function = "Function" + j;
-				j++;
+				if(this.inFunction == false){
+					this.inFunction = true;
+					this.function = "Function" + j;
+					j++;
+				}
 			} else if (str.indexOf("var ") > -1 && this.inFunction == false
 					&& this.inListener == false){
 				this.variables.add(str);
@@ -79,13 +83,8 @@ public class JavaScriptParser {
 			this.addFunction(str);
 
 		}
-
-		for (String key : this.eventListeners.keySet()) { 
-			System.out.println(key + " " + this.eventListeners.get(key)); 
-		}
 		 
-		
-		//System.out.println(this.code);
+		System.out.println(this.code);
 	}
 
 	/**
@@ -130,8 +129,6 @@ public class JavaScriptParser {
 	 * @param str
 	 */
 	private void addFunction(String str) {
-		//System.out.println(this.inListener + " " + this.inFunction + " " + this.brackets + " "+ str);
-
 		if (str.indexOf("}") == -1 && this.inFunction == true) {
 			if (this.functions.containsKey(this.function)) {
 				String body = this.functions.get(this.function);
