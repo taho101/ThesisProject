@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.java.mappings.JavaScriptMapper;
+import com.java.mappings.Mapper;
 
 public class JavaScriptParser {
 
@@ -35,7 +36,15 @@ public class JavaScriptParser {
 	}
 
 	// Rewrite this function
-	public void applyMappings(File file) throws IOException {
+	public void applyMappings(){
+		for(String function : this.functions.values()){
+			
+		}
+		
+		for(String var : this.variables){
+			mappings.mapVariable(var);
+		}
+		
 		/*
 		 * this.data = Files.readAllLines(file.toPath());
 		 * 
@@ -47,6 +56,10 @@ public class JavaScriptParser {
 		 * this.mappings.getMapping(key)); if(!str.equals(replacement)) tmp =
 		 * replacement; } }
 		 */
+	}
+	
+	public JavaScriptMapper getMappedData(){
+		return this.mappings;
 	}
 
 	public void readCode(List<String> content) {
@@ -83,8 +96,6 @@ public class JavaScriptParser {
 			this.addFunction(str);
 
 		}
-		 
-		System.out.println(this.code);
 	}
 
 	/**

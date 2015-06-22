@@ -12,6 +12,7 @@ import com.java.builders.CSharpBuilder;
 import com.java.builders.XAMLBuilder;
 import com.java.builders.XMLBuilder;
 import com.java.main.Helper;
+import com.java.mappings.JavaScriptMapper;
 import com.java.parsers.JavaScriptParser;
 import com.java.parsers.JsonParser;
 import com.java.parsers.XMLParser;
@@ -104,10 +105,15 @@ public class AlloyInterpreter implements Interpreter {
 	private String parseJS(File file) throws IOException {
 		JavaScriptParser jsParser = new JavaScriptParser();
 		
+		//separate the code parts
 		jsParser.readCode(Files.readAllLines(file.toPath()));
 		
+		//apply map equivalents and get the interpreted code
+		jsParser.applyMappings();
+		JavaScriptMapper code = jsParser.getMappedData();
 		
 		CSharpBuilder csharp = new CSharpBuilder(Helper.toUpper(file.getName().replace(".js", "")), "Component");
+		
 		
 		csharp.finishFile();
 
