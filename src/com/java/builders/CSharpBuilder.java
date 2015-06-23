@@ -3,7 +3,7 @@ package com.java.builders;
 public class CSharpBuilder {
 	
 	protected StringBuilder file;
-	protected String newline = "\n";
+	protected String newline = System.getProperty("line.separator");
 	
 	public CSharpBuilder(String className, String namespace){
 		this.file = new StringBuilder();

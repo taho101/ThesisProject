@@ -38,7 +38,7 @@ public class JavaScriptParser {
 	// Rewrite this function
 	public void applyMappings(){
 		for(String function : this.functions.values()){
-			
+			mappings.mapFunction(function);
 		}
 		
 		for(String var : this.variables){

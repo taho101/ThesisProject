@@ -3,7 +3,7 @@ package com.java.builders;
 public class XMLBuilder {
 	
 	protected StringBuilder xml;
-	protected String newline = "\n";
+	protected String newline = System.getProperty("line.separator");
 	
 	public XMLBuilder(){
 		this.xml = new StringBuilder();
