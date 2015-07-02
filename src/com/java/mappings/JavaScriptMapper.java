@@ -18,14 +18,16 @@ public class JavaScriptMapper extends Mapper {
 	
 	public JavaScriptMapper() {
 		this.mappings = new HashMap<String, String>();
+		
+		this.functions = new ArrayList<String>();
+		this.eventListeners = new ArrayList<String>();
+		this.variables = new ArrayList<String>();
 
-		this.mappings.put("OS_ANDROID", "Device.OS == TargetPlatform.Android");
-		this.mappings.put("OS_IOS", "Device.OS == TargetPlatform.iOS");
+		this.fillMappings();
 	}
 	
 	public void mapFunction(String function){
 		String[] info = function.split("\n");
-		
 		StringBuilder functionBuilder = new StringBuilder();
 		
 		functionBuilder.append(this.openFunction(info[0]) + this.newline);
@@ -34,12 +36,48 @@ public class JavaScriptMapper extends Mapper {
 			functionBuilder.append(this.applyMappings(info[i]) + this.newline);
 		}
 		
-		System.out.println(functionBuilder.toString());
+		this.functions.add(functionBuilder.toString());
 	}
+	
+	public void mapListener(String listener){
+		String[] info = listener.split("\n");
+		StringBuilder listenerBuilder = new StringBuilder();
+		
+		listenerBuilder.append(this.openListener(info[0]) + this.newline);
+		
+		for(int i = 1; i < info.length; i++){
+			listenerBuilder.append(this.applyMappings(info[i]) + this.newline);
+		}
+		
+		this.eventListeners.add(listenerBuilder.toString());
+	}
+	
 	
 	public void mapVariable(String var){
 		
 	}
+	
+	//returns delegate setup for the event listener
+	private String openListener(String begin){
+		String[] items = begin.split(" ");
+		String object = "";
+		String event = "";
+		
+		for(String item : items){
+			if(item.contains("(") && !item.contains("function")){
+				event = item.substring(item.indexOf("(") + 1, item.length()).replaceAll("\'", "").replaceAll("\"", "").replace(",", "");
+				item = item.substring(0, item.indexOf("("));
+			}
+			
+			if(item.contains(".")){
+				object = item.replace("$.", "").replace(".addEventListener", "");
+				
+				this.variables.add("private object " + object + ";");
+			}
+		}
+		
+		return object + "." + event + " += delegate {";
+	} 
 	
 	private String openFunction(String begin) {
 		String[] items = begin.split(" ");
@@ -120,6 +158,13 @@ public class JavaScriptMapper extends Mapper {
 	    }
 		
 		return text;
+	}
+	
+	private void fillMappings(){
+		this.mappings.put("OS_ANDROID", "Device.OS == TargetPlatform.Android");
+		this.mappings.put("OS_IOS", "Device.OS == TargetPlatform.iOS");
+		this.mappings.put("};", "}");
+		this.mappings.put("click", "TouchDown");
 	}
 	
 	/*

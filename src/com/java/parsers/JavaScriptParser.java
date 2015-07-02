@@ -1,15 +1,11 @@
 package com.java.parsers;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.java.mappings.JavaScriptMapper;
-import com.java.mappings.Mapper;
 
 public class JavaScriptParser {
 
@@ -35,7 +31,6 @@ public class JavaScriptParser {
 		this.mappings = new JavaScriptMapper();
 	}
 
-	// Rewrite this function
 	public void applyMappings(){
 		for(String function : this.functions.values()){
 			mappings.mapFunction(function);
@@ -45,17 +40,9 @@ public class JavaScriptParser {
 			mappings.mapVariable(var);
 		}
 		
-		/*
-		 * this.data = Files.readAllLines(file.toPath());
-		 * 
-		 * Set<String> keys = this.mappings.getKeys();
-		 * 
-		 * for(String str : this.data){ String tmp = str;
-		 * 
-		 * for(String key : keys){ String replacement = str.replace(key,
-		 * this.mappings.getMapping(key)); if(!str.equals(replacement)) tmp =
-		 * replacement; } }
-		 */
+		for(String listener : this.eventListeners.values()){
+			mappings.mapListener(listener);
+		}
 	}
 	
 	public JavaScriptMapper getMappedData(){
