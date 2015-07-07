@@ -43,6 +43,8 @@ public class JavaScriptParser {
 		for(String listener : this.eventListeners.values()){
 			mappings.mapListener(listener);
 		}
+		
+		mappings.mapMain(code);
 	}
 	
 	public JavaScriptMapper getMappedData(){
