@@ -114,6 +114,23 @@ public class AlloyInterpreter implements Interpreter {
 		
 		CSharpBuilder csharp = new CSharpBuilder(Helper.toUpper(file.getName().replace(".js", "")), "Component");
 		
+		//add variables
+		for(String var : code.getVariables()){
+			csharp.addCode(var);
+		}
+		
+		//add class constructor
+		csharp.addConstructor(Helper.toUpper(file.getName().replace(".js", "")), code.getCode());
+		
+		//add functions
+		for(String function : code.getFunctions()){
+			csharp.addCode(function);
+		}
+		
+		//add event listeners
+		for(String eventListener : code.getEventListeners()){
+			csharp.addCode(eventListener);
+		}
 		
 		csharp.finishFile();
 

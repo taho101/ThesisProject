@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 public class JavaScriptMapper extends Mapper {
-
+	
 	private List<String> variables;
 	private List<String> functions;
 	private List<String> eventListeners;
@@ -21,7 +21,7 @@ public class JavaScriptMapper extends Mapper {
 		this.functions = new ArrayList<String>();
 		this.eventListeners = new ArrayList<String>();
 		this.variables = new ArrayList<String>();
-
+		
 		this.fillMappings();
 	}
 
@@ -79,7 +79,15 @@ public class JavaScriptMapper extends Mapper {
 	}
 	
 	public void mapMain(String code){
+		String[] parts = code.split(this.newline);
+		StringBuilder function = new StringBuilder();
 		
+		for(String line : parts){
+			if(!line.equals(null))
+				function.append(this.applyMappings(line) + this.newline);
+		}
+		
+		this.code = function.toString();
 	}
 	
 	

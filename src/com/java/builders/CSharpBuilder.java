@@ -15,6 +15,16 @@ public class CSharpBuilder {
                          "{");
 	}
 	
+	public void addCode(String code){
+		this.file.append(code + this.newline);
+	}
+	
+	public void addConstructor(String className, String code){
+		this.file.append("public " + className + "(){" + this.newline);
+		this.file.append(code);
+		this.file.append("}" + this.newline);
+	}
+	
 	public void finishFile(){
 		this.file.append(this.newline + "}" + this.newline + "}");
 	}
