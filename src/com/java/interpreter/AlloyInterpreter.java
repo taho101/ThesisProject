@@ -64,7 +64,7 @@ public class AlloyInterpreter implements Interpreter {
 	}
 	
 	public void prepareStructure(){
-		File file = new File("C:\\Users\\Ivaylo\\Desktop\\Component");
+		File file = new File(System.getProperty("user.home") + "\\Desktop" + "\\Component");
 		
 		if(!file.exists()) 
 			file.mkdir();
