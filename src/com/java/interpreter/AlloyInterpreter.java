@@ -117,6 +117,7 @@ public class AlloyInterpreter implements Interpreter {
 		//add variables
 		for(String var : code.getVariables()){
 			csharp.addCode(var);
+			csharp.addNewline();
 		}
 		
 		//add class constructor

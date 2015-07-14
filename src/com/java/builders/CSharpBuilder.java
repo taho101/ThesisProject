@@ -12,7 +12,7 @@ public class CSharpBuilder {
                          "namespace " + namespace + this.newline +
                          "{" + this.newline + 
                          "public class "+ className +" : ContentPage" + this.newline +
-                         "{");
+                         "{" + this.newline);
 	}
 	
 	public void addCode(String code){
@@ -31,5 +31,9 @@ public class CSharpBuilder {
 	
 	public String getCode(){
 		return this.file.toString();
+	}
+	
+	public void addNewline(){
+		this.file.append(this.newline);
 	}
 }

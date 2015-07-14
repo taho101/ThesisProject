@@ -74,8 +74,9 @@ public class JavaScriptMapper extends Mapper {
 					break;
 			}
 		}
-
-		 this.variables.add(object + ";");
+		
+		if(!this.variables.contains("private " + object + ";") && !object.equals("object "))
+			this.variables.add("private " + object + ";");
 	}
 	
 	public void mapMain(String code){
@@ -108,9 +109,10 @@ public class JavaScriptMapper extends Mapper {
 
 			if (item.contains(".")) {
 				object = item.replace("$.", "")
-						.replace(".addEventListener", "");
-
-				this.variables.add("private object " + object + ";");
+						.replace(".addEventListener", "").replaceAll("\\s+","");
+				
+				if(!this.variables.contains("private object " + object + ";"))
+					this.variables.add("private object " + object + ";");
 			}
 		}
 
@@ -136,7 +138,7 @@ public class JavaScriptMapper extends Mapper {
 		for (int i = 0; i < variables.size(); i++) {
 			if (i > 0)
 				parameters.append(", ");
-			parameters.append("Object " + variables.get(i));
+			parameters.append("object " + variables.get(i));
 		}
 
 		return "public void " + fName + "(" + parameters.toString() + "){ "
