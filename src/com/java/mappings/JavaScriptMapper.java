@@ -34,7 +34,13 @@ public class JavaScriptMapper extends Mapper {
 		functionBuilder.append(this.openFunction(info[0]) + this.newline);
 
 		for (int i = 1; i < info.length; i++) {
-			functionBuilder.append(this.applyMappings(info[i]) + this.newline);
+			String mapped = this.applyMappings(info[i]);
+			
+			if(this.snippets.containsValue(mapped)){
+				System.out.println("Start collecting data for the snippets FUNCTION");
+			}else{
+				functionBuilder.append(this.applyMappings(info[i]) + this.newline);
+			}
 		}
 
 		this.functions.add(functionBuilder.toString());
@@ -47,7 +53,14 @@ public class JavaScriptMapper extends Mapper {
 		listenerBuilder.append(this.openListener(info[0]) + this.newline);
 
 		for (int i = 1; i < info.length; i++) {
-			listenerBuilder.append(this.applyMappings(info[i]) + this.newline);
+			String mapped = this.applyMappings(info[i]);
+			
+			if(this.snippets.containsValue(mapped)){
+				//String snippet = JavaScriptSnippets.ApplySnippet(mapped, line);
+				System.out.println("Start collecting data for the snippets LISTENER");
+			}else{
+				listenerBuilder.append( mapped + this.newline);
+			}
 		}
 
 		this.eventListeners.add(listenerBuilder.toString());
@@ -86,8 +99,17 @@ public class JavaScriptMapper extends Mapper {
 		StringBuilder function = new StringBuilder();
 		
 		for(String line : parts){
-			if(!line.equals(null))
-				function.append(this.applyMappings(line) + this.newline);
+			if(!line.equals(null)){
+				String mapped = this.applyMappings(line);
+				
+				if(this.snippets.containsValue(mapped)){
+					//String snippet = JavaScriptSnippets.ApplySnippet(mapped, line);
+					System.out.println("Start collecting data for the snippets");
+				}else{
+					function.append( mapped + this.newline);
+				}
+			}
+				
 		}
 		
 		this.code = function.toString();
@@ -207,7 +229,7 @@ public class JavaScriptMapper extends Mapper {
 			Entry<String, String> pair = it.next();
 			
 			if(text.indexOf(pair.getKey()) > -1 && this.snippets.containsKey(pair.getKey())){
-				System.out.println("Handle snippet");
+				text = this.snippets.get(pair.getKey());
 			}else{
 				text = text.replace(pair.getKey(), pair.getValue());
 			}
@@ -224,11 +246,11 @@ public class JavaScriptMapper extends Mapper {
 		this.mappings.put("'", "\"");
 		this.mappings.put("null", "");
 		
-		this.mappings.put("Titanium.UI.createButton", "");
+		this.mappings.put("Titanium.API.info", "");
 	}
 	
 	private void fillSnippets(){
-		this.snippets.put("Titanium.UI.createButton", "AlertView");
+		this.snippets.put("Titanium.API.info", "\\AlertView");
 	}
 
 	/*
