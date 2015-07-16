@@ -17,12 +17,14 @@ public class JavaScriptMapper extends Mapper {
 
 	public JavaScriptMapper() {
 		this.mappings = new HashMap<String, String>();
+		this.snippets = new HashMap<String, String>();
 
 		this.functions = new ArrayList<String>();
 		this.eventListeners = new ArrayList<String>();
 		this.variables = new ArrayList<String>();
 		
 		this.fillMappings();
+		this.fillSnippets();
 	}
 
 	public void mapFunction(String function) {
@@ -116,7 +118,7 @@ public class JavaScriptMapper extends Mapper {
 			}
 		}
 
-		return object + "." + event + " += delegate {";
+		return object + applyMappings("." + event) + " += delegate {";
 	}
 
 	private String openFunction(String begin) {
@@ -203,7 +205,12 @@ public class JavaScriptMapper extends Mapper {
 
 		while (it.hasNext()) {
 			Entry<String, String> pair = it.next();
-			text = text.replace(pair.getKey(), pair.getValue());
+			
+			if(text.indexOf(pair.getKey()) > -1 && this.snippets.containsKey(pair.getKey())){
+				System.out.println("Handle snippet");
+			}else{
+				text = text.replace(pair.getKey(), pair.getValue());
+			}
 		}
 
 		return text;
@@ -213,7 +220,15 @@ public class JavaScriptMapper extends Mapper {
 		this.mappings.put("OS_ANDROID", "Device.OS == TargetPlatform.Android");
 		this.mappings.put("OS_IOS", "Device.OS == TargetPlatform.iOS");
 		this.mappings.put("};", "}");
-		this.mappings.put("click", "TouchDown");
+		this.mappings.put(".click", ".TouchUpInside");
+		this.mappings.put("'", "\"");
+		this.mappings.put("null", "");
+		
+		this.mappings.put("Titanium.UI.createButton", "");
+	}
+	
+	private void fillSnippets(){
+		this.snippets.put("Titanium.UI.createButton", "AlertView");
 	}
 
 	/*
