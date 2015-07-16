@@ -22,6 +22,8 @@ public class JavaScriptParser {
 
 	private String event = "";
 	private String function = "";
+	
+	private String newline = System.getProperty("line.separator");
 
 	public JavaScriptParser() {
 		this.variables = new ArrayList<String>();
@@ -72,10 +74,11 @@ public class JavaScriptParser {
 					j++;
 				}
 			} else if (str.indexOf("var ") > -1 && this.inFunction == false
-					&& this.inListener == false){
+					&& this.inListener == false && str.indexOf("{") == -1){
 				this.variables.add(str);
 			}else{
-				this.code += str + "\n";
+				if(!this.inListener && !this.inFunction)
+					this.code += str + this.newline;
 			}
 
 			// register event listeners
@@ -96,10 +99,10 @@ public class JavaScriptParser {
 		if (str.indexOf("}") == -1 && this.inListener == true) {
 			if (this.eventListeners.containsKey(this.event)) {
 				String body = this.eventListeners.get(this.event);
-				body += str + "\n";
+				body += str + this.newline;
 				this.eventListeners.replace(this.event, body);
 			} else {
-				this.eventListeners.put(this.event, str + "\n");
+				this.eventListeners.put(this.event, str + this.newline);
 			}
 
 			if (str.indexOf("{") > -1) {
@@ -115,7 +118,7 @@ public class JavaScriptParser {
 			this.brackets--;
 
 			String body = this.eventListeners.get(this.event);
-			body += str + "\n";
+			body += str + this.newline;
 			this.eventListeners.replace(this.event, body);
 
 			if (this.brackets == 0)
@@ -132,10 +135,10 @@ public class JavaScriptParser {
 		if (str.indexOf("}") == -1 && this.inFunction == true) {
 			if (this.functions.containsKey(this.function)) {
 				String body = this.functions.get(this.function);
-				body += str + "\n";
+				body += str + this.newline;
 				this.functions.replace(this.function, body);
 			} else {
-				this.functions.put(this.function, str + "\n");
+				this.functions.put(this.function, str + this.newline);
 			}
 
 			if (str.indexOf("{") > -1) {
@@ -151,7 +154,7 @@ public class JavaScriptParser {
 			this.brackets--;
 
 			String body = this.functions.get(this.function);
-			body += str + "\n";
+			body += str + this.newline;
 			this.functions.replace(this.function, body);
 
 			if (this.brackets == 0)
