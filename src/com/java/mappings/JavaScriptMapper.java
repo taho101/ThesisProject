@@ -54,6 +54,10 @@ public class JavaScriptMapper extends Mapper {
 				functionBuilder.append(this.applyMappings(info[i]) + this.newline);
 			}
 		}
+		
+		for(String snippet : snippets){
+			JavaScriptSnippets.ApplySnippet(snippet);
+		}
 
 		this.functions.add(functionBuilder.toString());
 	}
@@ -79,6 +83,10 @@ public class JavaScriptMapper extends Mapper {
 			}else{
 				listenerBuilder.append( mapped + this.newline);
 			}
+		}
+		
+		for(String snippet : snippets){
+			JavaScriptSnippets.ApplySnippet(snippet);
 		}
 
 		this.eventListeners.add(listenerBuilder.toString());
@@ -136,6 +144,10 @@ public class JavaScriptMapper extends Mapper {
 				}
 			}
 				
+		}
+		
+		for(String snippet : snippets){
+			JavaScriptSnippets.ApplySnippet(snippet);
 		}
 		
 		this.code = function.toString();
@@ -280,7 +292,7 @@ public class JavaScriptMapper extends Mapper {
 			snippets.add(this.snippet.toString());
 			this.snippet = new StringBuilder();
 		}else{
-			this.snippet.append(part + this.newline);
+			this.snippet.append(part);
 		}
 	}
 	

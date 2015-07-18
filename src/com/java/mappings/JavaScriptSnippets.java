@@ -2,13 +2,10 @@ package com.java.mappings;
 
 public class JavaScriptSnippets {
 
-	public static String ApplySnippet(String type, String code) {
+	public static String ApplySnippet(String code) {
 		String interpreted = "";
 
-		switch (type) {
-			case "":
-				break;
-		}
+		System.out.println(code);
 
 		return interpreted;
 	}
