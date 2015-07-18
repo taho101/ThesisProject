@@ -31,7 +31,9 @@ public class JavaScriptMapper extends Mapper {
 		this.fillMappings();
 		this.fillSnippets();
 	}
-
+	
+	
+	//map function definition
 	public void mapFunction(String function) {
 		String[] info = function.split("\n");
 		StringBuilder functionBuilder = new StringBuilder();
@@ -55,7 +57,9 @@ public class JavaScriptMapper extends Mapper {
 
 		this.functions.add(functionBuilder.toString());
 	}
-
+	
+	
+	//map event listener
 	public void mapListener(String listener) {
 		String[] info = listener.split("\n");
 		StringBuilder listenerBuilder = new StringBuilder();
@@ -79,6 +83,7 @@ public class JavaScriptMapper extends Mapper {
 
 		this.eventListeners.add(listenerBuilder.toString());
 	}
+	
 
 	//map variables
 	public void mapVariable(String var) {
@@ -108,6 +113,7 @@ public class JavaScriptMapper extends Mapper {
 		if(!this.variables.contains("private " + object + ";") && !object.equals("object "))
 			this.variables.add("private " + object + ";");
 	}
+	
 	
 	//map main code
 	public void mapMain(String code){
@@ -163,6 +169,7 @@ public class JavaScriptMapper extends Mapper {
 		return object + applyMappings("." + event) + " += delegate {";
 	}
 	
+	
 	//Create the initialization of a function
 	private String openFunction(String begin) {
 		String[] items = begin.split(" ");
@@ -189,6 +196,7 @@ public class JavaScriptMapper extends Mapper {
 		return "public void " + fName + "(" + parameters.toString() + "){ "
 				+ this.newline;
 	}
+	
 
 	// Extract variables from string array
 	private List<String> addVariables(String[] items) {
@@ -241,7 +249,9 @@ public class JavaScriptMapper extends Mapper {
 
 		return variables;
 	}
-
+	
+	//apply general mappings for the code
+	//function is also used to find the beginning of a code snippet
 	private String applyMappings(String text) {
 		Iterator<Entry<String, String>> it = this.mappings.entrySet()
 				.iterator();
@@ -259,6 +269,8 @@ public class JavaScriptMapper extends Mapper {
 		return text;
 	}
 	
+	
+	//identify snippet content
 	private void prepareSnippet(String part, List<String> snippets){
 		if(part.indexOf(");") > -1){
 			this.inSnippet = false;
@@ -271,6 +283,7 @@ public class JavaScriptMapper extends Mapper {
 			this.snippet.append(part + this.newline);
 		}
 	}
+	
 
 	private void fillMappings() {
 		this.mappings.put("OS_ANDROID", "Device.OS == TargetPlatform.Android");
@@ -283,6 +296,7 @@ public class JavaScriptMapper extends Mapper {
 		this.mappings.put("Titanium.API.info", "");
 		this.mappings.put("Titanium.UI.createButton", "");
 	}
+	
 	
 	private void fillSnippets(){
 		this.snippets.put("Titanium.API.info", "\\AlertView");
