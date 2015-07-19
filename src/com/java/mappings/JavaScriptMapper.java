@@ -71,6 +71,7 @@ public class JavaScriptMapper extends Mapper {
 
 		listenerBuilder.append(this.openListener(info[0]) + this.newline);
 		
+		int j = 0;
 		for (int i = 1; i < info.length; i++) {
 			String mapped = this.applyMappings(info[i]);
 			
@@ -78,6 +79,8 @@ public class JavaScriptMapper extends Mapper {
 				this.inSnippet = true;
 				
 				this.prepareSnippet(info[i], snippets);
+				
+				listenerBuilder.append( "<!-- " + j + " -->" + this.newline);
 			}else if(this.inSnippet == true){
 				this.prepareSnippet(info[i], snippets);
 			}else{
@@ -85,11 +88,15 @@ public class JavaScriptMapper extends Mapper {
 			}
 		}
 		
-		for(String snippet : snippets){
-			JavaScriptSnippets.ApplySnippet(snippet);
+		//finish the construction
+		String done = listenerBuilder.toString();
+		for(int i = 0; i < snippets.size(); i++){
+			String mapped = JavaScriptSnippets.ApplySnippet(snippets.get(i));
+			
+			done = done.replace("<!-- "+ i +" -->", mapped);
 		}
 
-		this.eventListeners.add(listenerBuilder.toString());
+		this.eventListeners.add(done);
 	}
 	
 
