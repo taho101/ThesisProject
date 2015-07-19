@@ -80,7 +80,9 @@ public class JavaScriptMapper extends Mapper {
 				
 				this.prepareSnippet(info[i], snippets);
 				
+				//assign position in the code
 				listenerBuilder.append( "<!-- " + j + " -->" + this.newline);
+				j++;
 			}else if(this.inSnippet == true){
 				this.prepareSnippet(info[i], snippets);
 			}else{
@@ -136,6 +138,7 @@ public class JavaScriptMapper extends Mapper {
 		StringBuilder function = new StringBuilder();
 		List<String> snippets = new ArrayList<String>();
 		
+		int j = 0;
 		for(String line : parts){
 			if(!line.equals(null)){
 				String mapped = this.applyMappings(line);
@@ -144,6 +147,10 @@ public class JavaScriptMapper extends Mapper {
 					this.inSnippet = true;
 					
 					this.prepareSnippet(line, snippets);
+					
+					//assign position in the code
+					function.append( "<!-- " + j + " -->" + this.newline);
+					j++;
 				}else if(this.inSnippet == true){
 					this.prepareSnippet(line, snippets);
 				}else{
@@ -153,11 +160,15 @@ public class JavaScriptMapper extends Mapper {
 				
 		}
 		
-		for(String snippet : snippets){
-			JavaScriptSnippets.ApplySnippet(snippet);
+		//finish the construction
+		String done = function.toString();
+		for(int i = 0; i < snippets.size(); i++){
+			String mapped = JavaScriptSnippets.ApplySnippet(snippets.get(i).replace("nullvar", "").replaceFirst("var", ""));
+			
+			done = done.replace("<!-- "+ i +" -->", mapped);
 		}
 		
-		this.code = function.toString();
+		this.code = done;
 	}
 	
 	
