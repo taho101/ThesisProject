@@ -22,7 +22,18 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 		String parameters = code.substring(code.indexOf("(") + 1, code.indexOf(");"));
 		String variable = code.substring(0, code.indexOf("="));
 		
-		code = code.replace(parameters, "this.Context").replace("Titanium.UI.createButton", "new Button") + newline +
+		//replace parameters with their equivalent
+		String interpreted = parameters.replace("title:", "Text =").replace("top:", "VerticalOptions =").replaceAll("width: \\\\*+[0-9]+,", "")
+									   .replaceAll("height: \\\\*+[0-9]+", "HorizontalOptions = LayoutOptions.Center")
+									   .replaceAll("'", "\"");
+		//add newlines
+		interpreted = interpreted.replaceAll(",", "," + newline).replace("{", "{" + newline)
+								 .replace("}", newline + "}");
+		
+		System.out.println(interpreted);
+		
+		code = code.replace(parameters, "this.Context").replace("Titanium.UI.createButton", "new Button").replace(";", "") + newline +
+			   interpreted + ";" + newline +
 			   "this.AddView("+ variable +");";
 		
 		return code;

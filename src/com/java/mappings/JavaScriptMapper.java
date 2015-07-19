@@ -319,7 +319,7 @@ public class JavaScriptMapper extends Mapper {
 		this.mappings.put("OS_ANDROID", "Device.OS == TargetPlatform.Android");
 		this.mappings.put("OS_IOS", "Device.OS == TargetPlatform.iOS");
 		this.mappings.put("};", "}");
-		this.mappings.put(".click", ".TouchUpInside");
+		this.mappings.put(".click", ".Clicked");
 		this.mappings.put("'", "\"");
 		this.mappings.put("null", "");
 		
