@@ -30,8 +30,6 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 		interpreted = interpreted.replaceAll(",", "," + newline).replace("{", "{" + newline)
 								 .replace("}", newline + "}");
 		
-		System.out.println(interpreted);
-		
 		code = code.replace(parameters, "this.Context").replace("Titanium.UI.createButton", "new Button").replace(";", "") + newline +
 			   interpreted + ";" + newline +
 			   "this.AddView("+ variable +");";
