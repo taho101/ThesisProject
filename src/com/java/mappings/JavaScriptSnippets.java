@@ -7,12 +7,14 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 	private static String newline = System.getProperty("line.separator");
 
 	public static String ApplySnippet(String code) {
-		String interpreted = "";
+		String interpreted = code;
 
 		if(code.indexOf("Titanium.API.info") > -1)
 			interpreted = AlertWindow(code);
 		else if(code.indexOf("Titanium.UI.createButton") > -1)
 			interpreted = Button(code);
+		else if(code.indexOf("Ti.UI.createListView") > -1)
+			interpreted = ListView(code);
 
 		return interpreted;
 	}
@@ -50,5 +52,9 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 					   "	message"+ idx +".Show();" + newline;
 		
 		return alert;
+	}
+	
+	private static String ListView(String code){
+		return code.replace("object", "ListView").replace("Ti.UI.createListView", "new ListView");
 	}
 }

@@ -135,6 +135,9 @@ public class JavaScriptMapper extends Mapper {
 			}
 		}
 		
+		//apply snippet for variable init
+		object = JavaScriptSnippets.ApplySnippet(object);
+		
 		if(!this.variables.contains("private " + object + ";") && !object.equals("object "))
 			this.variables.add("private " + object + ";");
 	}
@@ -330,15 +333,19 @@ public class JavaScriptMapper extends Mapper {
 		this.mappings.put(".click", ".Clicked");
 		this.mappings.put("'", "\"");
 		this.mappings.put("null", "");
+		this.mappings.put("$.", "");
 		
+		//empty lines for snippets
 		this.mappings.put("Titanium.API.info", "");
 		this.mappings.put("Titanium.UI.createButton", "");
+		this.mappings.put("Ti.UI.createListView", "");
 	}
 	
 	
 	private void fillSnippets(){
 		this.snippets.put("Titanium.API.info", "\\AlertView");
 		this.snippets.put("Titanium.UI.createButton", "\\Button");
+		this.snippets.put("Ti.UI.createListView", "\\ListView");
 	}
 
 	/*
