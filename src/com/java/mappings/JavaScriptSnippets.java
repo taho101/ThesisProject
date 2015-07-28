@@ -15,6 +15,8 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 			interpreted = Button(code);
 		else if(code.indexOf("Ti.UI.createListView") > -1)
 			interpreted = ListView(code);
+		else if(code.indexOf("Ti.UI.createWindow") > -1)
+			interpreted = Page(code);
 
 		return interpreted;
 	}
@@ -56,5 +58,12 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 	
 	private static String ListView(String code){
 		return code.replace("object", "ListView").replace("Ti.UI.createListView", "new ListView");
+	}
+	
+	private static String Page(String code){
+		String main = code.substring(0, code.indexOf("{"));
+		
+		
+		return main.replace("Ti.UI.createWindow", "new ContentPage") + ");";
 	}
 }

@@ -339,6 +339,7 @@ public class JavaScriptMapper extends Mapper {
 		this.mappings.put("Titanium.API.info", "");
 		this.mappings.put("Titanium.UI.createButton", "");
 		this.mappings.put("Ti.UI.createListView", "");
+		this.mappings.put("Ti.UI.createWindow", "");
 	}
 	
 	
@@ -346,6 +347,7 @@ public class JavaScriptMapper extends Mapper {
 		this.snippets.put("Titanium.API.info", "\\AlertView");
 		this.snippets.put("Titanium.UI.createButton", "\\Button");
 		this.snippets.put("Ti.UI.createListView", "\\ListView");
+		this.snippets.put("Ti.UI.createWindow", "\\Window");
 	}
 
 	/*
