@@ -313,7 +313,7 @@ public class JavaScriptMapper extends Mapper {
 	
 	//identify snippet content
 	private void prepareSnippet(String part, List<String> snippets){
-		if(part.indexOf(");") > -1){
+		if(part.indexOf(");") > -1 || part.indexOf("];") > -1){
 			this.inSnippet = false;
 			
 			this.snippet.append(part);
@@ -340,6 +340,7 @@ public class JavaScriptMapper extends Mapper {
 		this.mappings.put("Titanium.UI.createButton", "");
 		this.mappings.put("Ti.UI.createListView", "");
 		this.mappings.put("Ti.UI.createWindow", "");
+		this.mappings.put("{properties:", "");
 	}
 	
 	
@@ -348,6 +349,7 @@ public class JavaScriptMapper extends Mapper {
 		this.snippets.put("Titanium.UI.createButton", "\\Button");
 		this.snippets.put("Ti.UI.createListView", "\\ListView");
 		this.snippets.put("Ti.UI.createWindow", "\\Window");
+		this.snippets.put("{properties:", "\\ListItemCollection");
 	}
 
 	/*

@@ -17,6 +17,8 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 			interpreted = ListView(code);
 		else if(code.indexOf("Ti.UI.createWindow") > -1)
 			interpreted = Page(code);
+		else if(code.indexOf("{properties:") > -1)
+			interpreted = ListItemCollection(code);
 
 		return interpreted;
 	}
@@ -65,5 +67,22 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 		
 		
 		return main.replace("Ti.UI.createWindow", "new ContentPage") + ");";
+	}
+	
+	private static String ListItemCollection(String code){
+		String data = code.substring(code.indexOf("[") + 1, code.indexOf("]"));
+		String[] items = data.split(",");
+		
+		StringBuilder listItems = new StringBuilder();
+		for(String item : items){
+			String temp = item.replaceAll("'", "\"");
+			
+			//extract title
+			String title = temp.substring(temp.indexOf("title: \"") + 8, temp.lastIndexOf("\""));
+			listItems.append("new ListItemValue (\""+ title +"\")," + newline);
+		}
+		
+		return "var " + code.substring(0, code.indexOf("=")) + " = new ListItemCollection<ListItemValue>() {" + newline +
+				listItems.toString() + "};" + newline;
 	}
 }
