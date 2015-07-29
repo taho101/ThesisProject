@@ -19,6 +19,9 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 			interpreted = Page(code);
 		else if(code.indexOf("{properties:") > -1)
 			interpreted = ListItemCollection(code);
+		else if(code.indexOf("Ti.UI.createListSection") > -1)
+			interpreted = Section(code);
+
 
 		return interpreted;
 	}
@@ -66,7 +69,7 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 		String main = code.substring(0, code.indexOf("{"));
 		
 		
-		return main.replace("Ti.UI.createWindow", "new ContentPage") + ");";
+		return "var" + main.replace("Ti.UI.createWindow", "new ContentPage") + ");";
 	}
 	
 	private static String ListItemCollection(String code){
@@ -84,5 +87,11 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 		
 		return "var " + code.substring(0, code.indexOf("=")) + " = new ListItemCollection<ListItemValue>() {" + newline +
 				listItems.toString() + "};" + newline;
+	}
+	
+	private static String Section(String code){
+		System.out.println(code);
+		
+		return code;
 	}
 }
