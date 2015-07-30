@@ -90,8 +90,9 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 	}
 	
 	private static String Section(String code){
-		System.out.println(code);
+		String sectionName = code.substring(code.indexOf("{") + 1, code.indexOf("}")).replaceAll("'", "\"");
+		String variable = code.substring(0, code.indexOf("Ti.UI.createListSection"));
 		
-		return code;
+		return "var" + variable + sectionName.replace("headerTitle:", "") + ";" + newline;
 	}
 }
