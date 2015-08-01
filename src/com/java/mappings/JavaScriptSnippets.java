@@ -21,6 +21,8 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 			interpreted = ListItemCollection(code);
 		else if(code.indexOf("Ti.UI.createListSection") > -1)
 			interpreted = Section(code);
+		else if(code.indexOf(".setItems") > -1)
+			interpreted = SetSection(code);
 
 
 		return interpreted;
@@ -56,7 +58,7 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 		int idx = Math.abs(rand.nextInt());
 		
 		String alert = "	UIAlertView message"+ idx +" = new UIAlertView (\"Widget\", "+ message +", null, \"Ok\", null);"+ newline +
-					   "	message"+ idx +".Show();" + newline;
+					   "	message"+ idx +".Show();";
 		
 		return alert;
 	}
@@ -86,13 +88,27 @@ public class JavaScriptSnippets extends JavaScriptMapper{
 		}
 		
 		return "var " + code.substring(0, code.indexOf("=")) + " = new ListItemCollection<ListItemValue>() {" + newline +
-				listItems.toString() + "};" + newline;
+				listItems.toString() + "};";
 	}
 	
 	private static String Section(String code){
 		String sectionName = code.substring(code.indexOf("{") + 1, code.indexOf("}")).replaceAll("'", "\"");
 		String variable = code.substring(0, code.indexOf("Ti.UI.createListSection"));
 		
-		return "var" + variable + sectionName.replace("headerTitle:", "") + ";" + newline;
+		return "var" + variable + sectionName.replace("headerTitle:", "") + ";";
+	}
+	
+	private static String SetSection(String code){
+		String sectionVar = code.substring(0, code.indexOf("."));
+		String listVar = code.substring(code.indexOf("(") + 1, code.indexOf(")"));
+		
+		Random rand = new Random();
+		int idx = Math.abs(rand.nextInt());
+		
+		String interpreted = "var adapter" + idx + " = new SeparatedListAdapter (this);" + newline +
+							 "adaprer" + idx + ".AddSection(" + sectionVar + "," + 
+							 " new ArrayAdapter<T> (this, Resource.Layout.ListItem, " + listVar + "));";
+		
+		return interpreted;
 	}
 }
