@@ -7,7 +7,7 @@ public class Execution {
 	
 	public static void main(String[] args){
 		//load path to component
-		String path = "tests\\listView";
+		String path = "tests\\customEditableTable";
 		
 		//instantiate the observer
 		ComponentObserver observer = ComponentObserver.getInstance();

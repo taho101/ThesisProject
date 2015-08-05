@@ -343,6 +343,7 @@ public class JavaScriptMapper extends Mapper {
 		this.mappings.put("{properties:", "");
 		this.mappings.put("Ti.UI.createListSection", "");
 		this.mappings.put(".setItems", "");
+		this.mappings.put(" in ", "");
 	}
 	
 	
@@ -354,6 +355,7 @@ public class JavaScriptMapper extends Mapper {
 		this.snippets.put("{properties:", "\\ListItemCollection");
 		this.snippets.put("Ti.UI.createListSection", "\\ListSection");
 		this.snippets.put(".setItems", "\\AddSection");
+		this.snippets.put(" in ", "\\Foreach");
 	}
 
 	/*

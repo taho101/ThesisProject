@@ -12,7 +12,7 @@ Ti.API.info(JSON.stringify(_args));
 
 //iterate round all the parameters we have passed in
 for (var key in _args) {
-  if (_args.hasOwnProperty(key)) {//checks key is a direct property of _args, not somewhere down the object tree  	
+  if (_args.hasOwnProperty(key)) {	
 	switch (key){
 		case 'labelColor':
 			$.lblTitle.color = _args[key];
@@ -40,7 +40,7 @@ for (var key in _args) {
 			if(OS_IOS){
 				$.table[key] = _args[key];
 			};
-			break;  //android doesn't recognise this property
+			break; 
 		default:
 			$.table[key] = _args[key];
 	};
