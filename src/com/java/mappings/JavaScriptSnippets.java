@@ -140,7 +140,8 @@ public class JavaScriptSnippets extends JavaScriptMapper {
 			code = code.replaceAll("\t", newline + "\t");
 
 		code = code.replace("for(", "foreach(var")
-				.replace("for (", "foreach (var").replace("{", "{" + newline);
+				.replace("for (", "foreach (var").replace("{", "{" + newline)
+				.replace("$.", "").replace("'", "\"");
 
 		return code;
 	}
