@@ -9,6 +9,7 @@ public class JavaScriptSnippets extends JavaScriptMapper {
 	public static String ApplySnippet(String code) {
 		String interpreted = code;
 
+		//it needs to be changed in future iterations
 		if (code.indexOf("Titanium.API.info") > -1)
 			interpreted = AlertWindow(code);
 		else if (code.indexOf("Titanium.UI.createButton") > -1)
@@ -25,6 +26,8 @@ public class JavaScriptSnippets extends JavaScriptMapper {
 			interpreted = SetSection(code);
 		else if (code.indexOf(" in ") > -1)
 			interpreted = Foreach(code);
+		else if (code.indexOf("Ti.UI.createAlertDialog") > -1)
+			interpreted = AlertDialog(code);
 
 		return interpreted;
 	}
@@ -145,4 +148,35 @@ public class JavaScriptSnippets extends JavaScriptMapper {
 
 		return code;
 	}
+	
+	private static String AlertDialog(String code){
+		String paramStr = code.substring(code.indexOf("{") + 1, code.indexOf("}")).replace("\t", "");
+		String[] parameters = paramStr.split(",");
+		
+		String message, accept, reject; 
+		message = accept = reject = "";
+		for(String parameter : parameters){
+			if(parameter.indexOf("message:") > -1)
+				message = parameter.replace("message:", "").replace("'", "\"").trim();
+			
+			if(parameter.indexOf("buttonNames:") > -1)
+				accept = parameter.substring(parameter.indexOf("[") + 1).replace("'", "\"").trim();
+			
+			if(parameter.indexOf("]") > -1){
+				int idx = (parameter.indexOf(",") > -1) ? parameter.indexOf(",") + 1 : 0;
+				reject = parameter.substring(idx, parameter.indexOf("]")).replace("'", "\"").trim();
+			}
+		}
+		
+		String snippet = "AlertDialog.Builder alert = new AlertDialog.Builder (this);"+ newline +
+				 		 "alert.SetTitle ("+ message +");" + newline +
+						 "alert.SetPositiveButton ("+ accept +", (senderAlert, args) => {} );" + newline +
+						 "alert.SetNegativeButton ("+ reject +", (senderAlert, args) => {} );";
+		
+		System.out.println(snippet);
+		
+		return snippet;
+	}
+	
+	//"RunOnUiThread (() => { alert.Show(); } );
 }
