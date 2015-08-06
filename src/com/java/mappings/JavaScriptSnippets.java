@@ -152,7 +152,8 @@ public class JavaScriptSnippets extends JavaScriptMapper {
 	private static String AlertDialog(String code){
 		String paramStr = code.substring(code.indexOf("{") + 1, code.indexOf("}")).replace("\t", "");
 		String[] parameters = paramStr.split(",");
-		
+		String alert = code.substring(0, code.indexOf("=")).replace("var", "").replace(" ", "").trim();
+				
 		String message, accept, reject; 
 		message = accept = reject = "";
 		for(String parameter : parameters){
@@ -168,15 +169,11 @@ public class JavaScriptSnippets extends JavaScriptMapper {
 			}
 		}
 		
-		String snippet = "AlertDialog.Builder alert = new AlertDialog.Builder (this);"+ newline +
-				 		 "alert.SetTitle ("+ message +");" + newline +
-						 "alert.SetPositiveButton ("+ accept +", (senderAlert, args) => {} );" + newline +
-						 "alert.SetNegativeButton ("+ reject +", (senderAlert, args) => {} );";
-		
-		System.out.println(snippet);
+		String snippet = "AlertDialog.Builder "+ alert +" = new AlertDialog.Builder (this);"+ newline +
+						 alert + ".SetTitle ("+ message +");" + newline +
+						 alert + ".SetPositiveButton ("+ accept +", (senderAlert, args) => {} );" + newline +
+						 alert + ".SetNegativeButton ("+ reject +", (senderAlert, args) => {} );";
 		
 		return snippet;
 	}
-	
-	//"RunOnUiThread (() => { alert.Show(); } );
 }

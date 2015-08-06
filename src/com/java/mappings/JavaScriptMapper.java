@@ -334,6 +334,7 @@ public class JavaScriptMapper extends Mapper {
 		this.mappings.put("'", "\"");
 		this.mappings.put("null", "");
 		this.mappings.put("$.", "");
+		this.mappings.put("show()", "Show()");
 		
 		//empty lines for snippets
 		this.mappings.put("Titanium.API.info", "");
